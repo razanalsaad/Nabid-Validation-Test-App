@@ -21,6 +21,11 @@ struct ContentView: View {
                     Label("Voice logging", systemImage: "2.circle")
                 }
             
+            SiriView()
+                .tabItem {
+                    Label("Siri", systemImage: "3.circle")
+                }
+            
             // Add ur views here ---
             
         }
