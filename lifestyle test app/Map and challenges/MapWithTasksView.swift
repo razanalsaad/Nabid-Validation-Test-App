@@ -26,19 +26,20 @@ struct Day {
     var tasks: [Task]
 }
 
+//24.80702747047247, 46.70873083945295
 
 struct MapWithTasksView: View {
     @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Example coordinates (San Francisco)
+        center: CLLocationCoordinate2D(latitude: 24.80716854271436, longitude: 46.70957006908957),
         span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
     )
     
     let weeklyChallenges: [WeeklyChallenge] = {
         var challenges = [WeeklyChallenge]()
         let sampleTasks = [
-            Task(name: "Task yay \(Int.random(in: 1...100))", date: Date(), isDone: false),
-            Task(name: "Task \(Int.random(in: 1...100))", date: Date(), isDone: false),
-            Task(name: "Task okay \(Int.random(in: 1...100))", date: Date(), isDone: false)
+            Task(name: "Task \(Int.random(in: 1...100))", date: Date(), isDone: true),
+            Task(name: "Task \(Int.random(in: 1...100))", date: Date(), isDone: true),
+            Task(name: "Task \(Int.random(in: 1...100))", date: Date(), isDone: false)
         ]
         
         for i in 1...10 {
@@ -46,7 +47,7 @@ struct MapWithTasksView: View {
                 Day(date: Calendar.current.date(byAdding: .day, value: offset, to: Date())!, tasks: sampleTasks)
             }
             let challenge = WeeklyChallenge(
-                id: UUID(), location: CLLocationCoordinate2D(latitude: 37.7749 + Double(i) * 0.01, longitude: -122.4194 + Double(i) * 0.01),
+                id: UUID(), location: CLLocationCoordinate2D(latitude: 24.80716854271436 + Double(i) * 0.001, longitude: 46.70957006908957 + Double(i) * 0.001),
                 days: days
             )
             challenges.append(challenge)
