@@ -21,7 +21,7 @@ struct ContentView: View {
                     Label("Voice logging", systemImage: "2.circle")
                 }
             
-            // Add ur views here --
+            // Add ur views here ---
             
         }
     }
