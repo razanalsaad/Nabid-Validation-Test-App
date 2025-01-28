@@ -15,8 +15,11 @@ final class SpeechAnalyzer: NSObject, ObservableObject, SFSpeechRecognizerDelega
     private var recognitionTask: SFSpeechRecognitionTask?
     private var audioSession: AVAudioSession?
     
+    
     @Published var recognizedText: String?
     @Published var isProcessing: Bool = false
+    @Published var errorMessage: String? // To display error messages in the UI
+
 
     func start() {
         audioSession = AVAudioSession.sharedInstance()
@@ -71,8 +74,9 @@ final class SpeechAnalyzer: NSObject, ObservableObject, SFSpeechRecognizerDelega
             try audioEngine.start()
             isProcessing = true
         } catch {
-            print("Coudn't start audio engine!")
-            stop()
+            handleError(error)
+//            print("Coudn't start audio engine!")
+//            stop()
         }
     }
     
@@ -93,6 +97,19 @@ final class SpeechAnalyzer: NSObject, ObservableObject, SFSpeechRecognizerDelega
         speechRecognizer = nil
     }
     
+    private func handleError(_ error: Error) {
+        stop() // Stop any ongoing processes
+        
+        // Map the error to a user friendly message
+        if let speechError = error as? SpeechRecognitionError {
+            errorMessage = speechError.localizedDescription
+        } else {
+            errorMessage = "An unexpected error occurred. Please try again."
+        }
+        
+        print("Error: \(error.localizedDescription)") // Log the error for debugging
+    }
+    
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             print("✅ Available")
@@ -100,6 +117,27 @@ final class SpeechAnalyzer: NSObject, ObservableObject, SFSpeechRecognizerDelega
             print("🔴 Unavailable")
             recognizedText = "Text recognition unavailable. Sorry!"
             stop()
+        }
+    }
+}
+
+// Custom Error Enum for Speech Recognition Errors
+enum SpeechRecognitionError: Error {
+    case unavailableRecognizer
+    case unableToCreateRequest
+    case audioSessionConfigurationFailed
+    case audioEngineStartupFailed
+    
+    var localizedDescription: String {
+        switch self {
+        case .unavailableRecognizer:
+            return "Speech recognition is not available on this device or is currently unavailable."
+        case .unableToCreateRequest:
+            return "Failed to create a speech recognition request."
+        case .audioSessionConfigurationFailed:
+            return "Failed to configure the audio session."
+        case .audioEngineStartupFailed:
+            return "Could not start the audio engine."
         }
     }
 }

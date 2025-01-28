@@ -16,6 +16,12 @@ struct SpeechRecognitionView: View {
     var body: some View {
         VStack {
             Spacer()
+            if let errorMessage = speechAnalyzer.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+            
             Text(speechAnalyzer.recognizedText ?? "Tap to begin")
                 .padding()
             
